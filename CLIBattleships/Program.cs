@@ -11,6 +11,7 @@ namespace CLIBattleships
         static void Main(string[] args)
         {
             GridPlane gridOne = new GridPlane();
+            gridOne.drawGrid(true);
             Console.ReadKey();
         }
     }

@@ -23,5 +23,45 @@ namespace CLIBattleships
             }
             return plane;
         }
+
+        public void drawGrid(bool ownGrid)
+        {
+            Console.WriteLine("   A B C D E F G H I J");
+            for (int i = 0; i < gridPlane.GetLength(0); i++)
+            {
+                if (i + 1 < 10) // Formatting to make numbers right alligned
+                    Console.Write(" " + i);
+                else
+                    Console.Write(i+1);               
+                for (int j = 0; j < gridPlane.GetLength(1); j++)
+                {
+                    switch (gridPlane[i, j].getType())
+                    {
+                        case GridType.Empty:
+                            Console.Write(" O");
+                            break;
+                        case GridType.Attacked:
+                            Console.Write(" /");
+                            break;
+                        case GridType.AircraftCarrier:
+                        case GridType.Battleship:
+                        case GridType.Destroyer:
+                        case GridType.Submarine:
+                        case GridType.Patrol:
+                            if(ownGrid)
+                                Console.Write(" =");
+                            else
+                                Console.Write(" O");
+                            break;
+                        case GridType.Hit:
+                            Console.Write(" X");
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                Console.WriteLine();
+            }
+        }
     }
 }

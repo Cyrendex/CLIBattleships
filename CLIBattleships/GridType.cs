@@ -12,6 +12,7 @@ namespace CLIBattleships
         Battleship,
         Destroyer,
         Submarine,
-        Patrol
+        Patrol,
+        Hit
     }
 }

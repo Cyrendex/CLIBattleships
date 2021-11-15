@@ -15,6 +15,10 @@ namespace CLIBattleships
             type = GridType.Empty;
         }
 
+        public GridType getType() 
+        {
+            return type;
+        }
         
     }
 }
