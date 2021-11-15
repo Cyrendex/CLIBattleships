@@ -9,10 +9,10 @@ namespace CLIBattleships
         Grid[,] gridPlane = new Grid[10, 10];
         public GridPlane()
         {
-            gridPlane = fillGridPlane();
+            gridPlane = FillGridPlane();
         }
 
-        private Grid[,] fillGridPlane() {
+        private Grid[,] FillGridPlane() {
             Grid[,] plane = new Grid[10, 10];
             for (int i = 0; i < plane.GetLength(0); i++)
             {
@@ -24,7 +24,7 @@ namespace CLIBattleships
             return plane;
         }
 
-        public void drawGrid(bool ownGrid)
+        public void DrawGrid(bool ownGrid)
         {
             Console.WriteLine("   A B C D E F G H I J");
             for (int i = 0; i < gridPlane.GetLength(0); i++)

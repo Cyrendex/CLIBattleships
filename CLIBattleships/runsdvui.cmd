@@ -1,0 +1,2 @@
+cd /d "C:\Users\Eren\source\repos\CLIBattleships\CLIBattleships" &msbuild "CLIBattleships.csproj" /t:sdvViewer /p:configuration="Debug" /p:platform="Any CPU" /p:SolutionDir="C:\Users\Eren\source\repos\CLIBattleships" 
+exit %errorlevel% 
