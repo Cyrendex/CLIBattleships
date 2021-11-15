@@ -4,9 +4,14 @@ namespace CLIBattleships
 {
     class Program
     {
+        static bool coordinateChecker(string coordinate)
+        {
+            return true;
+        }
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            GridPlane gridOne = new GridPlane();
+            Console.ReadKey();
         }
     }
 }
