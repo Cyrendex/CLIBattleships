@@ -15,10 +15,10 @@ namespace CLIBattleships
                 if (coordinate.Count(char.IsLetter) == 1 && char.IsLetter(coordinate, 0)) // Checks if there is only one letter. Also checks if the first digit is a letter.
                 {
                     int num = Int32.Parse(coordinate.Substring(1, length - 1).TrimStart('0').PadLeft(1, '0')); // Extract number from coordinate
-                    if (num > 0 || num <= 10)
+                    bool pass = Enum.TryParse(coordinate.Substring(0, 1), out CoordinateLetter let);
+                    if (num > 0 && num <= 10 && pass)
                     {
-                        number = num;
-                        bool pass = Enum.TryParse(coordinate.Substring(0, 1), out CoordinateLetter let);
+                        number = num;                       
                         letter = let;
                         return pass;
                     }
