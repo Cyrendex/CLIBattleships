@@ -19,6 +19,10 @@ namespace CLIBattleships
         {
             gridPlane[let, num] = grid;
         }
+        public void SetGridType(CoordinateLetter let, int num, GridType type)
+        {
+            gridPlane[(int)let, num-1].SetType(type);
+        }
         private Grid[,] FillGridPlane() {
             Grid[,] plane = new Grid[10, 10];
             for (int i = 0; i < plane.GetLength(0); i++)
@@ -42,7 +46,7 @@ namespace CLIBattleships
                     switch (gridPlane[i, j].GetType())
                     {
                         case GridType.Empty:
-                            Console.Write(" O");
+                            Console.Write(" -");
                             break;
                         case GridType.Attacked:
                             Console.Write(" /");
@@ -53,9 +57,9 @@ namespace CLIBattleships
                         case GridType.Submarine:
                         case GridType.Patrol:
                             if(ownGrid)
-                                Console.Write(" =");
-                            else
                                 Console.Write(" O");
+                            else
+                                Console.Write(" -");
                             break;
                         case GridType.Hit:
                             Console.Write(" X");

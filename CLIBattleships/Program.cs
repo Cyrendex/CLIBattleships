@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace CLIBattleships
 {
@@ -43,17 +42,36 @@ namespace CLIBattleships
             AskPlayerName(out string p1Name, out string p2Name);
             GridPlane gridOne = new GridPlane();
             GridPlane gridTwo = new GridPlane();
-
-            Player playerOne = InitPlayer(p1Name, gridOne);
-            Player playerTwo = InitPlayer(p2Name, gridTwo);
+            
+            Player playerOne;
+            Player playerTwo;
+            if (AskSalvo())
+            {
+                playerOne = InitPlayer(p1Name, gridOne, true);
+                playerTwo = InitPlayer(p2Name, gridTwo, true);
+            }
+            else
+            {
+                playerOne = InitPlayer(p1Name, gridOne);
+                playerTwo = InitPlayer(p2Name, gridTwo);
+            }
+            
 
             SetShipsOnGrid(playerOne);
             SetShipsOnGrid(playerTwo);
+
+            Player winner = GameLoop(ref playerOne, ref playerTwo);
+            Console.Clear();
+            playerOne.GetGridInfo().DrawGrid(true);
+            Console.WriteLine("==========================\n");
+            playerTwo.GetGridInfo().DrawGrid(true);
+
+            Console.WriteLine("Congratulations, " + winner.GetName() + "! You destroyed all the enemy ships!\n(Press any key to end the game)");
             Console.ReadKey();
         }
-        static Player InitPlayer(string name, GridPlane grid)
+        static Player InitPlayer(string name, GridPlane grid, bool isSalvo = false)
         {
-            Player player = new Player(name, grid);
+            Player player = new Player(name, grid, isSalvo);
             return player;
         }
 
@@ -452,6 +470,196 @@ namespace CLIBattleships
         {
             Console.Clear();
             plane.DrawGrid(ownGrid);
+        }
+        static Player CoinFlip(Player p1, Player p2)
+        {
+            Console.WriteLine("A coin flip will commence to decide who will start. (Press any key to continue)");
+            Console.ReadKey();
+            Random rnd = new Random();
+            int num = rnd.Next(1, 4);
+            System.Threading.Thread.Sleep(800);
+            Console.WriteLine("...");
+            System.Threading.Thread.Sleep(800);
+            Console.WriteLine("...");
+            System.Threading.Thread.Sleep(800);
+            if (num % 2 == 0)
+            {
+                Console.Write(p1.GetName() + " won the coin flip! Press any key to continue when you're ready.");
+                Console.ReadKey();
+                return p1;
+            }
+            else
+            {
+                Console.Write(p2.GetName() + " won the coin flip! Press any key to continue when you're ready.");
+                Console.ReadKey();
+                return p2;
+            }
+        }
+        static string Shoot(Player currentPlayer, Player enemyPlayer, int shotsLeft)
+        {
+            string message = "";
+            bool shot = false;
+            CoordinateLetter cL1;
+            int cN1;
+            while (!shot)
+            {
+                enemyPlayer.GetGridInfo().DrawGrid(false);
+                Console.WriteLine("Please enter the coordinate you want to shoot. ("+ shotsLeft +" shot(s) left)\n(If you want to view your own grid, type 'grid')");
+                string prompt = Console.ReadLine();
+                if(prompt.ToLower().Equals("grid"))
+                {
+                    Console.Clear();
+                    currentPlayer.GetGridInfo().DrawGrid(true);
+                    Console.WriteLine("(Press any key to go back)");
+                    Console.ReadKey();
+                    Console.Clear();
+                }
+                else
+                {
+                    bool valid = CoordinateHandler(prompt, out cL1, out cN1);
+                    if (valid)
+                    {
+                        Grid[,] temp = enemyPlayer.GetGridInfo().GetGridPlane();
+                        GridType type = temp[(int)cL1,cN1-1].GetType();
+                        bool isSalvo = currentPlayer.GetSalvo();
+                        ShipStatus status;
+                        switch (type)
+                        {
+                            case GridType.Empty:
+                                message = cL1 + (cN1 + " missed!\n"); // () to avoid any wacky enum synergies with addition                               
+                                enemyPlayer.GetGridInfo().SetGridType(cL1, cN1, GridType.Attacked);
+                                return message;
+                            case GridType.Attacked:
+                                Console.WriteLine("You already attacked this coordinate! Try again.");
+                                System.Threading.Thread.Sleep(1000);
+                                Console.Clear();
+                                break;
+                            case GridType.AircraftCarrier:
+                                status = enemyPlayer.ReduceHealth(type);
+                                enemyPlayer.GetGridInfo().SetGridType(cL1, cN1, GridType.Hit);
+                                message = cL1 + (cN1 + " hit");
+                                if (isSalvo)
+                                    message += " an Aircraft Carrier!\n";                      
+                                else
+                                    message += "!\n";
+                                if (status == ShipStatus.aircraftCarrierSunk)
+                                    message += "You sunk my battleship!\n";
+                                return message;
+                            case GridType.Battleship:
+                                status = enemyPlayer.ReduceHealth(type);
+                                enemyPlayer.GetGridInfo().SetGridType(cL1, cN1, GridType.Hit);
+                                message = cL1 + (cN1 + " hit");
+                                if (isSalvo)
+                                    message += " a Battleship!\n";
+                                else
+                                    message += "!\n";
+                                if (status == ShipStatus.battleshipSunk)
+                                    message += "You sunk my battleship!\n";
+                                return message;
+                            case GridType.Destroyer:
+                                status = enemyPlayer.ReduceHealth(type);
+                                enemyPlayer.GetGridInfo().SetGridType(cL1, cN1, GridType.Hit);
+                                message = cL1 + (cN1 + " hit");
+                                if (isSalvo)
+                                    message += " a Destroyer!\n";
+                                else
+                                    message += "!\n";
+                                if (status == ShipStatus.destroyerSunk)
+                                    message += "You sunk my battleship!\n";
+                                return message;
+                            case GridType.Submarine:
+                                status = enemyPlayer.ReduceHealth(type);
+                                enemyPlayer.GetGridInfo().SetGridType(cL1, cN1, GridType.Hit);
+                                message = cL1 + (cN1 + " hit");
+                                if (isSalvo)
+                                    message += " a Submarine!\n";
+                                else
+                                    message += "!\n";
+                                if (status == ShipStatus.submarineSunk)
+                                    message += "You sunk my battleship!\n";
+                                return message;
+                            case GridType.Patrol:
+                                status = enemyPlayer.ReduceHealth(type);
+                                enemyPlayer.GetGridInfo().SetGridType(cL1, cN1, GridType.Hit);
+                                message = cL1 + (cN1 + " hit");
+                                if (isSalvo)
+                                    message += " a Patrol!\n";
+                                else
+                                    message += "!\n";
+                                if (status == ShipStatus.patrolSunk)
+                                    message += "You sunk my battleship!\n";
+                                return message;
+                            case GridType.Hit:
+                                Console.WriteLine("You already hit a ship here! Try again.");
+                                System.Threading.Thread.Sleep(1000);        
+                                break;
+                            default:
+                                break;
+                        }                        
+                    }
+                }
+                Console.Clear();
+            }
+            return "";
+        }
+        static Player GameLoop(ref Player p1, ref Player p2)
+        {
+            Console.Clear();
+            Player currentPlayer = CoinFlip(p1, p2);
+            bool gameOver = false;
+            while (!gameOver)
+            {
+                Console.Clear();
+                Console.WriteLine(currentPlayer.GetName() + ", it's your turn! Press any key to proceed.");
+                Console.ReadKey();
+                Console.Clear();
+                string tempMessage = "----------------------------------------\n";
+                for (int shots = 0; shots < currentPlayer.GetNumberOfShots(); shots++)
+                {
+                    if (currentPlayer == p1)
+                        tempMessage += Shoot(p1, p2, p1.GetNumberOfShots() - shots);
+                    else
+                        tempMessage += Shoot(p2, p1, p2.GetNumberOfShots() - shots);
+                    Console.Clear();
+                }                              
+                Console.WriteLine(tempMessage + "----------------------------------------");
+                Console.WriteLine("Once you're ready to proceed, press any key.");
+                Console.ReadKey();
+                if (p1.GetTotalHealth() <= 0 || p2.GetTotalHealth() <= 0)
+                    gameOver = true;
+                else
+                {
+                    if (currentPlayer == p1)
+                        currentPlayer = p2;
+                    else
+                        currentPlayer = p1;
+                }
+            }
+            return currentPlayer;
+        }
+
+        static bool AskSalvo()
+        {
+            Console.WriteLine("Which variaton would you like to play? (1 or 2)\n(1) Classic (Default)\n(2) Salvo Variation(advanced)");
+            string input = Console.ReadLine();
+            if (input.Equals("1")) 
+            {
+                Console.WriteLine("You chose the Classic variation, have fun!");
+                System.Threading.Thread.Sleep(2500);
+                return false;                
+            }
+            else if (input.Equals("2"))
+            {
+                Console.WriteLine("You chose the Salvo variation, good luck!");
+                System.Threading.Thread.Sleep(2500);
+                return true;
+            }
+            else
+            {
+                Console.WriteLine("Invalid input. Choosing Classic variation.");
+                System.Threading.Thread.Sleep(2500);
+                return false;
+            }
         }
     }
 }
