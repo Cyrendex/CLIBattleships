@@ -33,16 +33,13 @@ namespace CLIBattleships
 
         public void DrawGrid(bool ownGrid)
         {
-            Console.WriteLine("   A B C D E F G H I J");
-            for (int i = 1; i <= gridPlane.GetLength(0); i++)
+            Console.WriteLine("  1 2 3 4 5 6 7 8 9 10");
+            for (int i = 0; i < gridPlane.GetLength(0); i++)
             {
-                if (i < 10) // Formatting to make numbers right alligned
-                    Console.Write(" " + i);
-                else
-                    Console.Write(i);               
-                for (int j = 1; j <= gridPlane.GetLength(1); j++)
+                    Console.Write((CoordinateLetter)i);               
+                for (int j = 0; j < gridPlane.GetLength(1); j++)
                 {
-                    switch (gridPlane[i-1, j-1].GetType())
+                    switch (gridPlane[i, j].GetType())
                     {
                         case GridType.Empty:
                             Console.Write(" O");
@@ -69,6 +66,7 @@ namespace CLIBattleships
                 }
                 Console.WriteLine();
             }
+            Console.WriteLine();
         }
     }
 }
