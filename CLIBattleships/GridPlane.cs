@@ -15,9 +15,9 @@ namespace CLIBattleships
             return gridPlane;
         }
         
-        public void SetGridPlane(int i, int j, Grid grid)
+        public void SetGridPlane(int let, int num, Grid grid)
         {
-            gridPlane[i, j] = grid;
+            gridPlane[let, num] = grid;
         }
         private Grid[,] FillGridPlane() {
             Grid[,] plane = new Grid[10, 10];
@@ -34,15 +34,15 @@ namespace CLIBattleships
         public void DrawGrid(bool ownGrid)
         {
             Console.WriteLine("   A B C D E F G H I J");
-            for (int i = 0; i < gridPlane.GetLength(0); i++)
+            for (int i = 1; i <= gridPlane.GetLength(0); i++)
             {
-                if (i + 1 < 10) // Formatting to make numbers right alligned
+                if (i < 10) // Formatting to make numbers right alligned
                     Console.Write(" " + i);
                 else
-                    Console.Write(i+1);               
-                for (int j = 0; j < gridPlane.GetLength(1); j++)
+                    Console.Write(i);               
+                for (int j = 1; j <= gridPlane.GetLength(1); j++)
                 {
-                    switch (gridPlane[i, j].GetType())
+                    switch (gridPlane[i-1, j-1].GetType())
                     {
                         case GridType.Empty:
                             Console.Write(" O");
