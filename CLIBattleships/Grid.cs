@@ -14,11 +14,22 @@ namespace CLIBattleships
             this.number = number;
             type = GridType.Empty;
         }
+        public Grid(CoordinateLetter letter, int number, GridType type)
+        {
+            this.letter = letter;
+            this.number = number;
+            this.type = type;
+        }
 
-        public GridType getType() 
+        public GridType GetType() 
         {
             return type;
         }
-        
+
+        public void SetType(GridType type)
+        {
+            this.type = type;
+        }
+
     }
 }

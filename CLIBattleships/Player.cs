@@ -15,6 +15,11 @@ namespace CLIBattleships
             this.plane = plane;
         }
 
+        public GridPlane GetGridInfo()
+        {
+            return plane;
+        }
+
         public string GetName()
         {
             return name;

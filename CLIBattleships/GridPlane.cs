@@ -11,7 +11,14 @@ namespace CLIBattleships
         {
             gridPlane = FillGridPlane();
         }
-
+        public Grid[,] GetGridPlane() {
+            return gridPlane;
+        }
+        
+        public void SetGridPlane(int i, int j, Grid grid)
+        {
+            gridPlane[i, j] = grid;
+        }
         private Grid[,] FillGridPlane() {
             Grid[,] plane = new Grid[10, 10];
             for (int i = 0; i < plane.GetLength(0); i++)
@@ -35,7 +42,7 @@ namespace CLIBattleships
                     Console.Write(i+1);               
                 for (int j = 0; j < gridPlane.GetLength(1); j++)
                 {
-                    switch (gridPlane[i, j].getType())
+                    switch (gridPlane[i, j].GetType())
                     {
                         case GridType.Empty:
                             Console.Write(" O");
