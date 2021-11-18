@@ -15,7 +15,7 @@ namespace CLIBattleships
                 if (coordinate.Count(char.IsLetter) == 1 && char.IsLetter(coordinate, 0)) // Checks if there is only one letter. Also checks if the first digit is a letter.
                 {
                     int num = Int32.Parse(coordinate.Substring(1, length - 1).TrimStart('0').PadLeft(1, '0')); // Extract number from coordinate
-                    bool pass = Enum.TryParse(coordinate.Substring(0, 1), out CoordinateLetter let);
+                    bool pass = Enum.TryParse(coordinate.Substring(0, 1).ToUpper(), out CoordinateLetter let);
                     if (num > 0 && num <= 10 && pass)
                     {
                         number = num;                       
@@ -29,7 +29,7 @@ namespace CLIBattleships
         }
         static void CoordinateAsker(out CoordinateLetter letter, out int number)
         {
-            bool valid = false;
+            bool valid;
             do
             {
                 Console.Write("Please enter a coordinate: ");
@@ -47,7 +47,8 @@ namespace CLIBattleships
             Player playerOne = InitPlayer(p1Name, gridOne);
             Player playerTwo = InitPlayer(p2Name, gridTwo);
 
-            SetShipsOnGrid(playerOne.GetGridInfo());
+            SetShipsOnGrid(playerOne);
+            SetShipsOnGrid(playerTwo);
             Console.ReadKey();
         }
         static Player InitPlayer(string name, GridPlane grid)
@@ -58,7 +59,7 @@ namespace CLIBattleships
 
         static void AskPlayerName(out string p1Name, out string p2Name)
         {
-            bool valid = true;
+            bool valid;
             do
             {
                 Console.Write("Enter a name for player one: ");
@@ -148,26 +149,27 @@ namespace CLIBattleships
             }
             return true;
         }
-        static void SetShipsOnGrid(GridPlane plane)
+        static void SetShipsOnGrid(Player player)
         {
-            SetAircraftCarrier(plane);
-            SetBattleship(plane);
-            SetDestroyer(plane);
-            SetSubmarine(plane);
-            SetPatrol(plane);
+            SetAircraftCarrier(player.GetGridInfo(), player);
+            SetBattleship(player.GetGridInfo(), player);
+            SetDestroyer(player.GetGridInfo(), player);
+            SetSubmarine(player.GetGridInfo(), player);
+            SetPatrol(player.GetGridInfo(), player);
         }
         static GridType GetType(Grid[,] grid, int pos1, int pos2)
         {
             return grid[pos1, pos2].GetType();
         }
-        static void SetAircraftCarrier(GridPlane plane)
+        static void SetAircraftCarrier(GridPlane plane, Player player)
         {
+            Console.Clear();
             plane.DrawGrid(true);
             int cN1, cN2;
             CoordinateLetter cL1, cL2;
-            bool inBound = false;
-            bool noCollision = false;
-            Console.WriteLine("Please enter the desired coordinates to place your Aircraft Carrier. (Length: 5)");
+            bool inBound;
+            bool noCollision;
+            Console.WriteLine(player.GetName() + ", please enter the desired coordinates to place your Aircraft Carrier. (Length: 5)");
             do
             {
                 Console.WriteLine("Where should be the starting point of your Aircraft Carrier?");
@@ -218,13 +220,13 @@ namespace CLIBattleships
             }
             RedrawGrid(plane, true);
         }
-        static void SetBattleship(GridPlane plane)
+        static void SetBattleship(GridPlane plane, Player player)
         {
             int cN1, cN2;
             CoordinateLetter cL1, cL2;
-            bool inBound = false;
-            bool noCollision = false;
-            Console.WriteLine("Please enter the desired coordinates to place your Battleship. (Length: 4)");
+            bool inBound;
+            bool noCollision;
+            Console.WriteLine(player.GetName() + ", please enter the desired coordinates to place your Battleship. (Length: 4)");
             do
             {
                 Console.WriteLine("Where should be the starting point of your Battleship?");
@@ -275,13 +277,13 @@ namespace CLIBattleships
             }
             RedrawGrid(plane, true);
         }
-        static void SetDestroyer(GridPlane plane)
+        static void SetDestroyer(GridPlane plane, Player player)
         {
             int cN1, cN2;
             CoordinateLetter cL1, cL2;
-            bool inBound = false;
-            bool noCollision = false;
-            Console.WriteLine("Please enter the desired coordinates to place your Destroyer. (Length: 3)");
+            bool inBound;
+            bool noCollision;
+            Console.WriteLine(player.GetName() + ", please enter the desired coordinates to place your Destroyer. (Length: 3)");
             do
             {
                 Console.WriteLine("Where should be the starting point of your Destroyer?");
@@ -332,13 +334,13 @@ namespace CLIBattleships
             }
             RedrawGrid(plane, true);
         }
-        static void SetSubmarine(GridPlane plane)
+        static void SetSubmarine(GridPlane plane, Player player)
         {
             int cN1, cN2;
             CoordinateLetter cL1, cL2;
-            bool inBound = false;
-            bool noCollision = false;
-            Console.WriteLine("Please enter the desired coordinates to place your Submarine. (Length: 3)");
+            bool inBound;
+            bool noCollision;
+            Console.WriteLine(player.GetName() + ", please enter the desired coordinates to place your Submarine. (Length: 3)");
             do
             {
                 Console.WriteLine("Where should be the starting point of your Submarine?");
@@ -389,13 +391,13 @@ namespace CLIBattleships
             }
             RedrawGrid(plane, true);
         }
-        static void SetPatrol(GridPlane plane)
+        static void SetPatrol(GridPlane plane, Player player)
         {
             int cN1, cN2;
             CoordinateLetter cL1, cL2;
-            bool inBound = false;
-            bool noCollision = false;
-            Console.WriteLine("Please enter the desired coordinates to place your Patrol. (Length: 2)");
+            bool inBound;
+            bool noCollision;
+            Console.WriteLine(player.GetName() + ", please enter the desired coordinates to place your Patrol. (Length: 2)");
             do
             {
                 Console.WriteLine("Where should be the starting point of your Patrol?");
