@@ -11,7 +11,6 @@ namespace CLIBattleships
         destroyerSunk,
         submarineSunk,
         patrolSunk,
-        allSunk,
         allIsWell // :)
     }
 }

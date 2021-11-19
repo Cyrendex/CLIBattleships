@@ -89,7 +89,7 @@ namespace CLIBattleships
                 }
                 else if (string.IsNullOrEmpty(p1Name))
                 {
-                    Console.WriteLine("Name can't be left empty, defaulting to \"Player One\"");
+                    Console.WriteLine("Name can't be left empty, defaulting to \"Player One.\"");
                     p1Name = "Player One";
                     valid = true;
                 }
@@ -109,7 +109,7 @@ namespace CLIBattleships
                 }
                 else if (string.IsNullOrEmpty(p2Name))
                 {
-                    Console.WriteLine("Name can't be left empty, defaulting to \"Player Two\"");
+                    Console.WriteLine("Name can't be left empty, defaulting to \"Player Two.\"");
                     p2Name = "Player Two";
                     valid = true;
                 }
@@ -121,6 +121,7 @@ namespace CLIBattleships
                 else
                     valid = true;
             } while (!valid);
+            System.Threading.Thread.Sleep(1000);
             Console.Clear();           
         }
         static bool BoundChecker(CoordinateLetter cL1, CoordinateLetter cL2, int cN1, int cN2, int bound)
@@ -497,7 +498,7 @@ namespace CLIBattleships
         }
         static string Shoot(Player currentPlayer, Player enemyPlayer, int shotsLeft)
         {
-            string message = "";
+            string message;
             bool shot = false;
             CoordinateLetter cL1;
             int cN1;
@@ -640,7 +641,7 @@ namespace CLIBattleships
 
         static bool AskSalvo()
         {
-            Console.WriteLine("Which variaton would you like to play? (1 or 2)\n(1) Classic (Default)\n(2) Salvo Variation(advanced)");
+            Console.WriteLine("Which variaton would you like to play? (1 or 2)\n(1) Classic (Default)\n(2) Salvo Variation (Advanced)");
             string input = Console.ReadLine();
             if (input.Equals("1")) 
             {
