@@ -5,6 +5,7 @@ namespace CLIBattleships
 {
     class Program
     {
+        // Testing things out
         static bool CoordinateHandler(string coordinate, out CoordinateLetter letter, out int number)
         {
             // Coordinates need a letter and a number ranging from A-J and 1-10 respectively, inclusive.
