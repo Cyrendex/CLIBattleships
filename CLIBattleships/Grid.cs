@@ -6,10 +6,10 @@ namespace CLIBattleships
 {
     class Grid
     {
-        // This is a change!
         CoordinateLetter letter;
         int number;
         GridType type;
+        GridContent content;
         public Grid(CoordinateLetter letter, int number) {
             this.letter = letter;
             this.number = number;
