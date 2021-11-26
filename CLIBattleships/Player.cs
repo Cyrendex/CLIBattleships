@@ -16,6 +16,8 @@ namespace CLIBattleships
         int totalHealth = 17;
         int numberOfShots = 1;
         bool isSalvo = false;
+        // New properties from here and onwards
+        Grid[][] GridPlane { get; set; }
         public Player(string name, GridPlane plane, bool isSalvo = false)
         {
             this.name = name;
@@ -26,6 +28,12 @@ namespace CLIBattleships
                 numberOfShots = 5;
             }
 
+        }
+        public Player(string name, Grid[][] plane)
+        {
+            this.name = name;
+            GridPlane = plane;
+            
         }
         public bool GetSalvo()
         {
@@ -111,6 +119,34 @@ namespace CLIBattleships
         public string GetName()
         {
             return name;
+        }
+
+        // New methods from this point and onwards
+
+        /* If it's the player's own grid, the ships will be drawn with their respective symbols. If not, they will be drawn with the empty symbol. */
+        public void DrawGridPlane(bool ownGrid = false)
+        {
+            Console.Write("   "); // Initial space to allign letters
+            for (int coordinateLetter = 0; coordinateLetter < GlobalConstant.GRID_YSIZE; coordinateLetter++)
+            {
+                Console.Write((CoordinateLetter)coordinateLetter + " ");
+
+            }
+            Console.WriteLine();
+            for (int coordinateNumber = 1; coordinateNumber <= GlobalConstant.GRID_XSIZE; coordinateNumber++)
+            {
+                if (coordinateNumber < 10)
+                    Console.Write(" " + coordinateNumber);
+                else
+                    Console.Write(coordinateNumber);
+
+                for (int coordinateLetter = 0; coordinateLetter < GlobalConstant.GRID_YSIZE; coordinateLetter++)
+                {
+                    Console.Write(" " + GridPlane[coordinateNumber - 1][coordinateLetter].GetSymbol(ownGrid));
+                   
+                }
+                Console.WriteLine();
+            }
         }
     }
 }

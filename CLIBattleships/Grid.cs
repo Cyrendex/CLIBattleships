@@ -6,20 +6,29 @@ namespace CLIBattleships
 {
     class Grid
     {
-        CoordinateLetter letter;
-        int number;
-        GridType type;
-        GridContent content;
+        public CoordinateLetter Letter { get; set; }
+        public int Number { get; set; }
+        GridType type; // To be deleted after implementing GridContent
+        public GridContent Content { get; set; }
+        public GridState State { get; set; }
+
         public Grid(CoordinateLetter letter, int number) {
-            this.letter = letter;
-            this.number = number;
+            Letter = letter;
+            Number = number;
             type = GridType.Empty;
         }
         public Grid(CoordinateLetter letter, int number, GridType type)
         {
-            this.letter = letter;
-            this.number = number;
+            Letter = letter;
+            Number = number;
             this.type = type;
+        }
+        public Grid(CoordinateLetter letter, int number, GridContent content)
+        {
+            Letter = letter;
+            Number = number;
+            Content = content;
+            State = GridState.NotAttacked;
         }
 
         public GridType GetType() 
@@ -32,5 +41,22 @@ namespace CLIBattleships
             this.type = type;
         }
 
+        // New methods from this point on.
+
+        public char GetSymbol(bool ownGrid)
+        {
+            if (State == GridState.Attacked)
+            {
+                if (Content is EmptyContent)
+                    return Symbols.ATTACKED_SYMBOL;
+                else
+                    return Symbols.HIT_SYMBOL;
+            }
+
+            if (ownGrid && Content is ShipContent)
+                    return Content.Symbol;
+            else
+                return Symbols.EMPTY_SYMBOL;
+        }
     }
 }

@@ -39,6 +39,7 @@ namespace CLIBattleships
         }
         static void Main(string[] args)
         {
+            /*
             AskPlayerName(out string p1Name, out string p2Name);
             GridPlane gridOne = new GridPlane();
             GridPlane gridTwo = new GridPlane();
@@ -67,6 +68,11 @@ namespace CLIBattleships
             playerTwo.GetGridInfo().DrawGrid(true);
 
             Console.WriteLine("Congratulations, " + winner.GetName() + "! You destroyed all the enemy ships!\n(Press any key to end the game)");
+            Console.ReadKey();
+            */
+            Grid[][] p1GridPlane = GridPlaneHandler.MakeGridPlane();
+            Player p1 = new Player("ASD", p1GridPlane);
+            p1.DrawGridPlane();
             Console.ReadKey();
         }
         static Player InitPlayer(string name, GridPlane grid, bool isSalvo = false)

@@ -4,11 +4,12 @@ using System.Text;
 
 namespace CLIBattleships
 {
-    internal class AircraftCarrier : ShipContent
+    class AircraftCarrier : ShipContent
     {
-        public override int size { get; } = 5;
-        public override int health { get; set; } = 5;
-        public override int score { get; set; } = 1000;
+        public override char Symbol => Symbols.AIRCRAFT_CARRIER_SYMBOL;
+        public override int Size { get; } = 5;
+        public override int Health { get; set; } = 5;
+        public override int Score { get; set; } = 1000;
         public override string ReturnHitMessage(bool isSalvoVariation = false)
         {
             string hitMessage = " hit";

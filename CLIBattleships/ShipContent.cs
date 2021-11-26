@@ -6,15 +6,15 @@ namespace CLIBattleships
 {
     public abstract class ShipContent : GridContent
     {
-        public abstract int size { get; }
-        public abstract int health { get; set; }
+        public abstract int Size { get; }
+        public abstract int Health { get; set; }
         public bool IsSunk()
         {
-            return health < 1;
+            return Health < 1;
         }
         public void ReduceHealth()
         {
-            health--;
+            Health--;
         }
     }
 }
