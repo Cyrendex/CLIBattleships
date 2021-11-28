@@ -6,6 +6,7 @@ namespace CLIBattleships
 {
     class Battleship : ShipContent
     {
+        public override string Name => "Battleship";
         public override char Symbol => Symbols.BATTLESHIP_SYMBOL;
         public override int Size { get; } = 4;
         public override int Health { get; set; } = 4;

@@ -17,7 +17,11 @@ namespace CLIBattleships
         int numberOfShots = 1;
         bool isSalvo = false;
         // New properties from here and onwards
+        string Name { get; set; }
         Grid[][] GridPlane { get; set; }
+        ShipContent[] ShipList { get; set; }
+
+
         public Player(string name, GridPlane plane, bool isSalvo = false)
         {
             this.name = name;
@@ -31,10 +35,16 @@ namespace CLIBattleships
         }
         public Player(string name, Grid[][] plane)
         {
-            this.name = name;
+            Name = name;
             GridPlane = plane;
-            
+            AircraftCarrier aircraftCarrier = new AircraftCarrier();
+            Battleship battleship = new Battleship();
+            Destroyer destroyer = new Destroyer();
+            Submarine submarine = new Submarine();
+            Patrol patrol = new Patrol();
+            ShipList = new ShipContent[] { aircraftCarrier, battleship, destroyer, submarine, patrol };
         }
+
         public bool GetSalvo()
         {
             return isSalvo;
@@ -147,6 +157,33 @@ namespace CLIBattleships
                 }
                 Console.WriteLine();
             }
+        }
+        public void SetShipsOnGridPlane()
+        {
+            int coordinateNumber1, coordinateNumber2;
+            CoordinateLetter coordinateLetter1, coordinateLetter2;
+            bool valid;
+            foreach (ShipContent ship in ShipList)
+	        {
+                do
+                {
+                    Console.WriteLine(Name + ", what should be the starting point of your " + ship.Name + "?");
+                    CoordinateHandler.CoordinateAsker(out coordinateLetter1, out coordinateNumber1);
+                    Console.WriteLine(Name + ", what should be the ending point of your " + ship.Name + "?");
+                    CoordinateHandler.CoordinateAsker(out coordinateLetter2, out coordinateNumber2);
+                    valid = GridPlaneHandler.SizeAndCollisionChecker(ship.Name, GridPlane, coordinateLetter1, coordinateLetter2, coordinateNumber1, coordinateNumber2, ship.Size);
+                } while (!valid);
+
+                GridPlaneHandler.ShipSetter(ship, GridPlane, coordinateLetter1, coordinateLetter2, coordinateNumber1, coordinateNumber2);
+	        }
+        }
+        
+        public void Shoot(Player enemyPlayer)
+        {
+            string message;
+            bool shot = false;
+            CoordinateLetter coordinateLetter1;
+            int coordinateNumber1;
         }
     }
 }

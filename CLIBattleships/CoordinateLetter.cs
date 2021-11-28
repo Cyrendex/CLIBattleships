@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CLIBattleships
 {
-    enum CoordinateLetter
+    public enum CoordinateLetter
     {
         A,
         B,

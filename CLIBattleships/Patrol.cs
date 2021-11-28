@@ -6,6 +6,7 @@ namespace CLIBattleships
 {
     internal class Patrol : ShipContent
     {
+        public override string Name => "Patrol";
         public override char Symbol => Symbols.PATROL_SYMBOL;
         public override int Size { get; } = 2;
         public override int Health { get; set; } = 2;

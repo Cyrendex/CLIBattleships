@@ -4,10 +4,16 @@ using System.Text;
 
 namespace CLIBattleships
 {
-    public abstract class ShipContent : GridContent
+    public class ShipContent : GridContent
     {
-        public abstract int Size { get; }
-        public abstract int Health { get; set; }
+        public virtual string Name { get; } = "Ship";
+        public virtual int Size { get; }
+        public virtual int Health { get; set; } = 1;
+
+        public override char Symbol => ' ';
+
+        public override int Score { get; set; } = 0;
+
         public bool IsSunk()
         {
             return Health < 1;
@@ -15,6 +21,14 @@ namespace CLIBattleships
         public void ReduceHealth()
         {
             Health--;
+        }
+
+        public override string ReturnHitMessage(bool isSalvoVariation = false)
+        {
+            string hitMessage = " hit";
+            if (isSalvoVariation)
+                hitMessage += " a ...Ship?";
+            return hitMessage += "!?";
         }
     }
 }

@@ -58,5 +58,14 @@ namespace CLIBattleships
             else
                 return Symbols.EMPTY_SYMBOL;
         }
+
+        public void PrintAttackedMessage()
+        {
+            if (Content is EmptyContent)
+                Console.WriteLine("You already attacked this grid!");
+            else
+                Console.WriteLine("You already hit a ship here!");
+            
+        }
     }
 }

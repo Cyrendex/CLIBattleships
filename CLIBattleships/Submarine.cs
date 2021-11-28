@@ -6,6 +6,7 @@ namespace CLIBattleships
 {
     internal class Submarine : ShipContent
     {
+        public override string Name => "Submarine";
         public override char Symbol => Symbols.SUBMARINE_SYMBOL;
         public override int Size { get; } = 3;
         public override int Health { get; set; } = 3;

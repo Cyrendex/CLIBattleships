@@ -71,8 +71,16 @@ namespace CLIBattleships
             Console.ReadKey();
             */
             Grid[][] p1GridPlane = GridPlaneHandler.MakeGridPlane();
-            Player p1 = new Player("ASD", p1GridPlane);
+            Player p1 = new Player("Eren", p1GridPlane);
             p1.DrawGridPlane();
+            Console.ReadKey();
+            Console.Clear();
+            p1.SetShipsOnGridPlane();
+            Console.Clear();
+            p1.DrawGridPlane(true);
+            p1GridPlane[0][0].Content.ReturnHitMessage();
+            ShipContent temp = (ShipContent)p1GridPlane[0][0].Content;
+            temp.ReduceHealth(); // Left here, fix accessibility
             Console.ReadKey();
         }
         static Player InitPlayer(string name, GridPlane grid, bool isSalvo = false)
