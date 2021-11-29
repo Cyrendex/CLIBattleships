@@ -13,6 +13,7 @@ namespace CLIBattleships
         public int Score { get; set; }
         public int TotalHealth { get; set; }
 
+        // In order to add/remove a ship, initialize it in the constructor and add it to the ShipList
         public Player(string name, Grid[][] plane)
         {
             Name = name;
@@ -23,7 +24,8 @@ namespace CLIBattleships
             Destroyer destroyer = new Destroyer(this);
             Submarine submarine = new Submarine(this);
             Patrol patrol = new Patrol(this);
-            ShipList = new ShipContent[] { aircraftCarrier, battleship, destroyer, submarine, patrol };
+            TestShip testShip = new TestShip(this);
+            ShipList = new ShipContent[] { aircraftCarrier, battleship, destroyer, submarine, patrol, testShip };
             if (GameSettings.salvoMode)
                 NumberOfShots = ShipList.Length;
             else
@@ -34,20 +36,20 @@ namespace CLIBattleships
         public void DrawGridPlane(bool ownGrid = false)
         {
             Console.Write("   "); // Initial space to allign letters
-            for (int coordinateLetter = 0; coordinateLetter < GameSettings.GRID_YSIZE; coordinateLetter++)
+            for (int coordinateLetter = 0; coordinateLetter < GameSettings.GRID_XSIZE; coordinateLetter++)
             {
                 Console.Write((CoordinateLetter)coordinateLetter + " ");
 
             }
             Console.WriteLine();
-            for (int coordinateNumber = 1; coordinateNumber <= GameSettings.GRID_XSIZE; coordinateNumber++)
+            for (int coordinateNumber = 1; coordinateNumber <= GameSettings.GRID_YSIZE; coordinateNumber++)
             {
                 if (coordinateNumber < 10)
                     Console.Write(" " + coordinateNumber);
                 else
                     Console.Write(coordinateNumber);
 
-                for (int coordinateLetter = 0; coordinateLetter < GameSettings.GRID_YSIZE; coordinateLetter++)
+                for (int coordinateLetter = 0; coordinateLetter < GameSettings.GRID_XSIZE; coordinateLetter++)
                 {
                     Console.Write(" " + GridPlane[coordinateNumber - 1][coordinateLetter].GetSymbol(ownGrid));
                    
@@ -67,20 +69,20 @@ namespace CLIBattleships
         public void DrawGridPlane(bool gameEnded, bool ownGrid = false)
         {
             Console.Write("   "); // Initial space to allign letters
-            for (int coordinateLetter = 0; coordinateLetter < GameSettings.GRID_YSIZE; coordinateLetter++)
+            for (int coordinateLetter = 0; coordinateLetter < GameSettings.GRID_XSIZE; coordinateLetter++)
             {
                 Console.Write((CoordinateLetter)coordinateLetter + " ");
 
             }
             Console.WriteLine();
-            for (int coordinateNumber = 1; coordinateNumber <= GameSettings.GRID_XSIZE; coordinateNumber++)
+            for (int coordinateNumber = 1; coordinateNumber <= GameSettings.GRID_YSIZE; coordinateNumber++)
             {
                 if (coordinateNumber < 10)
                     Console.Write(" " + coordinateNumber);
                 else
                     Console.Write(coordinateNumber);
 
-                for (int coordinateLetter = 0; coordinateLetter < GameSettings.GRID_YSIZE; coordinateLetter++)
+                for (int coordinateLetter = 0; coordinateLetter < GameSettings.GRID_XSIZE; coordinateLetter++)
                 {
                     Console.Write(" " + GridPlane[coordinateNumber - 1][coordinateLetter].GetSymbol(ownGrid));
 
