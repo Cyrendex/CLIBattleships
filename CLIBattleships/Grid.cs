@@ -4,32 +4,43 @@ using System.Text;
 
 namespace CLIBattleships
 {
-    class Grid
+    public class Grid
     {
-        CoordinateLetter letter;
-        int number;
-        GridType type;
-        public Grid(CoordinateLetter letter, int number) {
-            this.letter = letter;
-            this.number = number;
-            type = GridType.Empty;
-        }
-        public Grid(CoordinateLetter letter, int number, GridType type)
+        public CoordinateLetter Letter { get; set; }
+        public int Number { get; set; }
+        public GridContent Content { get; set; }
+        public GridState State { get; set; }
+
+        public Grid(CoordinateLetter letter, int number, GridContent content)
         {
-            this.letter = letter;
-            this.number = number;
-            this.type = type;
+            Letter = letter;
+            Number = number;
+            Content = content;
+            State = GridState.NotAttacked;
         }
 
-        public GridType GetType() 
+        public char GetSymbol(bool ownGrid)
         {
-            return type;
+            if (State == GridState.Attacked)
+            {
+                if (Content is EmptyContent)
+                    return Symbols.ATTACKED_SYMBOL;
+                else
+                    return Symbols.HIT_SYMBOL;
+            }
+
+            if (ownGrid && Content is ShipContent)
+                    return Content.Symbol;
+            else
+                return Symbols.EMPTY_SYMBOL;
         }
 
-        public void SetType(GridType type)
+        public void PrintAttackedMessage()
         {
-            this.type = type;
+            if (Content is EmptyContent)
+                Console.WriteLine("You already attacked this grid! Try again.");
+            else
+                Console.WriteLine("You already hit a ship here! Try again.");           
         }
-
     }
 }
