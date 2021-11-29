@@ -4,25 +4,13 @@ using System.Text;
 
 namespace CLIBattleships
 {
-    class Grid
+    public class Grid
     {
         public CoordinateLetter Letter { get; set; }
         public int Number { get; set; }
-        GridType type; // To be deleted after implementing GridContent
         public GridContent Content { get; set; }
         public GridState State { get; set; }
 
-        public Grid(CoordinateLetter letter, int number) {
-            Letter = letter;
-            Number = number;
-            type = GridType.Empty;
-        }
-        public Grid(CoordinateLetter letter, int number, GridType type)
-        {
-            Letter = letter;
-            Number = number;
-            this.type = type;
-        }
         public Grid(CoordinateLetter letter, int number, GridContent content)
         {
             Letter = letter;
@@ -30,18 +18,6 @@ namespace CLIBattleships
             Content = content;
             State = GridState.NotAttacked;
         }
-
-        public GridType GetType() 
-        {
-            return type;
-        }
-
-        public void SetType(GridType type)
-        {
-            this.type = type;
-        }
-
-        // New methods from this point on.
 
         public char GetSymbol(bool ownGrid)
         {
@@ -62,10 +38,9 @@ namespace CLIBattleships
         public void PrintAttackedMessage()
         {
             if (Content is EmptyContent)
-                Console.WriteLine("You already attacked this grid!");
+                Console.WriteLine("You already attacked this grid! Try again.");
             else
-                Console.WriteLine("You already hit a ship here!");
-            
+                Console.WriteLine("You already hit a ship here! Try again.");           
         }
     }
 }

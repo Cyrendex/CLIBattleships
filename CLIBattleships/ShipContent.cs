@@ -14,21 +14,26 @@ namespace CLIBattleships
 
         public override int Score { get; set; } = 0;
 
+        public ShipContent(Player p1)
+        {
+            p1.TotalHealth += Size;
+        }
         public bool IsSunk()
         {
             return Health < 1;
-        }
-        public void ReduceHealth()
-        {
-            Health--;
+           
         }
 
-        public override string ReturnHitMessage(bool isSalvoVariation = false)
+        public override string ReturnHitMessage()
         {
             string hitMessage = " hit";
-            if (isSalvoVariation)
+            if (GameSettings.salvoMode)
                 hitMessage += " a ...Ship?";
             return hitMessage += "!?";
+        }
+        public string ReturnSunkMessage()
+        {
+            return "You sunk my " + (GameSettings.salvoMode == true ? Name : "battleship") + "!"; // In salvo mode, you must provide more information.
         }
     }
 }

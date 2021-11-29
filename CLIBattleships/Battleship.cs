@@ -4,17 +4,20 @@ using System.Text;
 
 namespace CLIBattleships
 {
-    class Battleship : ShipContent
+    public class Battleship : ShipContent
     {
         public override string Name => "Battleship";
         public override char Symbol => Symbols.BATTLESHIP_SYMBOL;
         public override int Size { get; } = 4;
         public override int Health { get; set; } = 4;
         public override int Score { get; set; } = 1000;
-        public override string ReturnHitMessage(bool isSalvoVariation = false)
+        public Battleship(Player p1) : base(p1)
+        {
+        }
+        public override string ReturnHitMessage()
         {
             string hitMessage = " hit";
-            if (isSalvoVariation)
+            if (GameSettings.salvoMode)
                 hitMessage += " a Battleship";
             return hitMessage += "!";
         }

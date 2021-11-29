@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CLIBattleships
 {
-    enum GridState
+    public enum GridState
     {
         NotAttacked,
         Attacked

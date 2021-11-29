@@ -4,15 +4,15 @@ using System.Text;
 
 namespace CLIBattleships
 {
-    static class GridPlaneHandler
+    public static class GridPlaneHandler
     {
         public static Grid[][] MakeGridPlane()
         {
-            Grid[][] tempGridPlane = new Grid[GlobalConstant.GRID_XSIZE][];
-            for (int coordinateNumber = 0; coordinateNumber < GlobalConstant.GRID_XSIZE; coordinateNumber++)
+            Grid[][] tempGridPlane = new Grid[GameSettings.GRID_XSIZE][];
+            for (int coordinateNumber = 0; coordinateNumber < GameSettings.GRID_XSIZE; coordinateNumber++)
             {
-                tempGridPlane[coordinateNumber] = new Grid[GlobalConstant.GRID_YSIZE];
-                for (int coordinateLetter = 0; coordinateLetter < GlobalConstant.GRID_YSIZE; coordinateLetter++)
+                tempGridPlane[coordinateNumber] = new Grid[GameSettings.GRID_YSIZE];
+                for (int coordinateLetter = 0; coordinateLetter < GameSettings.GRID_YSIZE; coordinateLetter++)
                 {
                     tempGridPlane[coordinateNumber][coordinateLetter] = new Grid(letter: (CoordinateLetter)coordinateLetter, number: coordinateNumber + 1, content: new EmptyContent());         
                 }
@@ -40,7 +40,7 @@ namespace CLIBattleships
             }
             else //Same column
             {
-                int col = coordinateNumber1;
+                int col = coordinateNumber1 - 1; // Index reasons
                 int start = Math.Min((int)coordinateLetter1, (int)coordinateLetter2);
                 int end = Math.Max((int)coordinateLetter1, (int)coordinateLetter2);
 
@@ -93,7 +93,7 @@ namespace CLIBattleships
             }
             else //Same column
             {
-                int col = coordinateNumber1;
+                int col = coordinateNumber1 - 1; // Index reasons.
                 int start = Math.Min((int)coordinateLetter1, (int)coordinateLetter2);
                 int end = Math.Max((int)coordinateLetter1, (int)coordinateLetter2);
 
