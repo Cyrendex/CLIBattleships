@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace CLIBattleships
@@ -35,19 +36,41 @@ namespace CLIBattleships
         /* If it's the player's own grid, the ships will be drawn with their respective symbols. If not, they will be drawn with the empty symbol. */
         public void DrawGridPlane(bool ownGrid = false)
         {
-            Console.Write("   "); // Initial space to allign letters
-            for (int coordinateLetter = 0; coordinateLetter < GameSettings.GRID_XSIZE; coordinateLetter++)
+            int maxIndent = (int)Math.Floor(Math.Log10(GameSettings.GRID_YSIZE)); // How many times you'd need to indent at most.
+            int indent = 0;
+            var myswitch = new Dictionary<Func<int, bool>, Action> // Function to decide how many times I need to indent for each case
+                {
+                    { x => x < 10 ,          () => indent = maxIndent     },
+                    { x => x < 100 ,         () => indent = maxIndent - 1 },
+                    { x => x < 1000 ,        () => indent = maxIndent - 2 },
+                    { x => x < 10000 ,       () => indent = maxIndent - 3 },
+                    { x => x < 100000 ,      () => indent = maxIndent - 4 },
+                    { x => x < 1000000 ,     () => indent = maxIndent - 5 },
+                    { x => x < 10000000 ,    () => indent = maxIndent - 6 },
+                    { x => x < 100000000 ,   () => indent = maxIndent - 7 },
+                    { x => x < 1000000000 ,  () => indent = maxIndent - 8 }
+                };
+
+            for (int i = 0; i < maxIndent + 2; i++) // +2 for the initial space
+            {
+                Console.Write(" ");
+            }
+            for (int coordinateLetter = 0; coordinateLetter < GameSettings.GRID_XSIZE; coordinateLetter++) // Loop for setting the letters in.
             {
                 Console.Write((CoordinateLetter)coordinateLetter + " ");
 
             }
             Console.WriteLine();
+            
+
             for (int coordinateNumber = 1; coordinateNumber <= GameSettings.GRID_YSIZE; coordinateNumber++)
             {
-                if (coordinateNumber < 10)
-                    Console.Write(" " + coordinateNumber);
-                else
-                    Console.Write(coordinateNumber);
+                myswitch.First(sw => sw.Key(coordinateNumber)).Value();
+                for (int i = 0; i < indent; i++)
+                {
+                    Console.Write(" ");
+                }
+                Console.Write(coordinateNumber);
 
                 for (int coordinateLetter = 0; coordinateLetter < GameSettings.GRID_XSIZE; coordinateLetter++)
                 {

@@ -14,13 +14,13 @@ namespace CLIBattleships
             coordinateLetter = 0; // Temp value
             coordinate.ToUpper();
             int length = coordinate.Length;
-            if (length <= 3 && length > 1) // A healthy coordinate is either 2 or 3 characters long (A1, B10)
+            if (length < 12 && length > 1) // A healthy coordinate can now be very long. Letter + 11 digits from integer limit. Please don't try this.
                 if (coordinate.Count(char.IsLetter) == 1 && char.IsLetter(coordinate, 0)) // Checks if there is only one letter. Also checks if the first digit is a letter.
                 {
                     int num = Int32.Parse(coordinate.Substring(1, length - 1).TrimStart('0').PadLeft(1, '0')); // Extract number from coordinate
                     Enum.TryParse(coordinate.Substring(0, 1).ToUpper(), out CoordinateLetter letter);
-                    bool letterValid = (int)letter <= GameSettings.GRID_XSIZE; // Checks if the letter is in bound of global size.
-                    if (num > 0 && num <= GameSettings.GRID_YSIZE && letterValid)
+                    bool letterValid = (int)letter <= GameSettings.GRID_XSIZE; // Checks if the letter is in bound of global size. MAX: 26
+                    if (num > 0 && num <= GameSettings.GRID_YSIZE && letterValid) // Seriously, don't try this. MAX: int limit
                     {
                         coordinateNumber = num;
                         coordinateLetter = letter;
