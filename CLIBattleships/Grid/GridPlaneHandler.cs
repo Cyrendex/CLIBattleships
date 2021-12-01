@@ -8,11 +8,11 @@ namespace CLIBattleships
     {
         public static Grid[][] MakeGridPlane()
         {
-            Grid[][] tempGridPlane = new Grid[GameSettings.GRID_YSIZE][];
-            for (int coordinateNumber = 0; coordinateNumber < GameSettings.GRID_YSIZE; coordinateNumber++)
+            Grid[][] tempGridPlane = new Grid[GameSettings.GridYSize][];
+            for (int coordinateNumber = 0; coordinateNumber < GameSettings.GridYSize; coordinateNumber++)
             {
-                tempGridPlane[coordinateNumber] = new Grid[GameSettings.GRID_XSIZE];
-                for (int coordinateLetter = 0; coordinateLetter < GameSettings.GRID_XSIZE; coordinateLetter++)
+                tempGridPlane[coordinateNumber] = new Grid[GameSettings.GridXSize];
+                for (int coordinateLetter = 0; coordinateLetter < GameSettings.GridXSize; coordinateLetter++)
                 {
                     tempGridPlane[coordinateNumber][coordinateLetter] = new Grid(letter: (CoordinateLetter)coordinateLetter, number: coordinateNumber + 1, content: new EmptyContent());         
                 }

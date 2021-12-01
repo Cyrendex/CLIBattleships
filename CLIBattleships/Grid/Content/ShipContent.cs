@@ -4,19 +4,20 @@ using System.Text;
 
 namespace CLIBattleships
 {
-    public class ShipContent : GridContent
+    public abstract class ShipContent : GridContent
     {
-        public virtual string Name { get; } = "Ship";
-        public virtual int Size { get; }
-        public virtual int Health { get; set; } = 1;
+        public abstract string Name { get; }
+        public abstract int Size { get; }
+        public int Health { get; set; }
 
         public override char Symbol => ' ';
 
         public override int Score { get; set; } = 0;
 
-        public ShipContent(Player p1)
+        public ShipContent(Player owner)
         {
-            p1.TotalHealth += Size;
+            owner.TotalHealth += Size;
+            Health = Size;
         }
         public bool IsSunk()
         {
@@ -24,12 +25,12 @@ namespace CLIBattleships
            
         }
 
-        public override string ReturnHitMessage()
+        public override sealed string ReturnHitMessage()
         {
             string hitMessage = " hit";
             if (GameSettings.salvoMode)
-                hitMessage += " a ...Ship?";
-            return hitMessage += "!?";
+                hitMessage += $" a(n) {Name}";
+            return hitMessage += "!";
         }
         public string ReturnSunkMessage()
         {

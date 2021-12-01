@@ -8,69 +8,62 @@ namespace CLIBattleships
     {
         public static void InitializePlayers(out Player p1, out Player p2)
         {
-            string p1Name, p2Name;
             Grid[][] p1GridPlane = GridPlaneHandler.MakeGridPlane();
             Grid[][] p2GridPlane = GridPlaneHandler.MakeGridPlane();
-            AskPlayerName(out p1Name, out p2Name);
-            p1 = new Player(p1Name, p1GridPlane);
-            p2 = new Player(p2Name, p2GridPlane);
-            p1.SetShipsOnGridPlane();
+            p1 = new Player(p1GridPlane);
+            p2 = new Player(p2GridPlane);
+            Player[] playerList = new Player[] {p1, p2};
+            playerList[0].Name = AskPlayerName(playerList);
+            playerList[1].Name = AskPlayerName(playerList);
+            
+            playerList[0].SetShipsOnGridPlane();
             Console.Clear();
-            Console.WriteLine(p2.Name + ", press any key to proceed.");
+            Console.WriteLine(playerList[1].Name + ", press any key to proceed.");
             Console.ReadKey();
             Console.Clear();
-            p2.SetShipsOnGridPlane();
+            playerList[1].SetShipsOnGridPlane();
         }
-        static void AskPlayerName(out string p1Name, out string p2Name)
+        private static string AskPlayerName(Player[] playerList)
         {
-            bool valid;
-            do
+            string name = "";
+            bool valid = false;
+            foreach (Player player in playerList)
             {
-                Console.Write("Enter a name for player one: ");
-                p1Name = Console.ReadLine().Trim();
-                if (p1Name.Length > GameSettings.NAME_CHARACTER_LIMIT)
+                int playerNumber = Array.IndexOf(playerList, player) + 1;
+                if (valid)
+                    break;
+                if (string.IsNullOrEmpty(player.Name))
                 {
-                    Console.WriteLine("Name too long, can't be longer than {0} characters.", GameSettings.NAME_CHARACTER_LIMIT);
-                    valid = false;
+                    do
+                    {
+                        Console.Write("Enter a name for player {0}: ", playerNumber);
+                        name = Console.ReadLine().Trim();
+                        if (name.Length > GameSettings.NameCharacterLimit)
+                        {
+                            Console.WriteLine("Name too long, can't be longer than {0} characters.", GameSettings.NameCharacterLimit);
+                            valid = false;
+                        }
+                        else if (string.IsNullOrEmpty(name))
+                        {
+                            Console.WriteLine("Name can't be left empty, defaulting to \"Player {0}.\"", playerNumber);
+                            name = "Player " + playerNumber;
+                            valid = true;
+                        }
+                        else if (playerList[0].Name.Equals(playerList[1].Name))
+                        {
+                            Console.WriteLine("Names of the players can't be the same.");
+                            valid = false;
+                        }
+                        else
+                            valid = true;
+                    } while (!valid);
                 }
-                else if (string.IsNullOrEmpty(p1Name))
-                {
-                    Console.WriteLine("Name can't be left empty, defaulting to \"Player One.\"");
-                    p1Name = "Player One";
-                    valid = true;
-                }
-                else
-                    valid = true;
-            } while (!valid);
-            Console.WriteLine();
-
-            do
-            {
-                Console.Write("Enter a name for player two: ");
-                p2Name = Console.ReadLine().Trim();
-                if (p2Name.Length > GameSettings.NAME_CHARACTER_LIMIT)
-                {
-                    Console.WriteLine("Name too long, can't be longer than {0} characters.", GameSettings.NAME_CHARACTER_LIMIT);
-                    valid = false;
-                }
-                else if (string.IsNullOrEmpty(p2Name))
-                {
-                    Console.WriteLine("Name can't be left empty, defaulting to \"Player Two.\"");
-                    p2Name = "Player Two";
-                    valid = true;
-                }
-                else if (p1Name.Equals(p2Name))
-                {
-                    Console.WriteLine("Name can't be the same as player one, try again.");
-                    valid = false;
-                }
-                else
-                    valid = true;
-            } while (!valid);
+            }
             System.Threading.Thread.Sleep(1000);
             Console.Clear();
+            return name;
         }
-        public static void  AskSalvo()
+        public static void AskSalvo()
         {
             Console.WriteLine("Which variaton would you like to play? (1 or 2)\n(1) Classic (Default)\n(2) Salvo Variation (Advanced)");
             Console.Write("Selection: ");
@@ -111,9 +104,9 @@ namespace CLIBattleships
                 
                 report += "-----------------------------------\n";
                 if(currentPlayer == p1)
-                    report += currentPlayer.ShootAndReportStatus(p2);
+                    report += currentPlayer.ShootAndReturnStatus(p2);
                 else
-                    report += currentPlayer.ShootAndReportStatus(p1);
+                    report += currentPlayer.ShootAndReturnStatus(p1);
                 report += "-----------------------------------";
                 Console.WriteLine(report);
                 Console.WriteLine("\nOnce you're ready to proceed, press any key.");
@@ -130,9 +123,9 @@ namespace CLIBattleships
         {
             Console.Clear();
             Console.WriteLine(p1.Name + ":");
-            p1.DrawGridPlane(gameEnded: true, true);
+            p1.DrawGridPlane(true, true);
             Console.WriteLine(p2.Name + ":");
-            p2.DrawGridPlane(gameEnded: true, true);
+            p2.DrawGridPlane(true, true);
             Console.WriteLine();
             Console.WriteLine("Congratulations, " + winner.Name + "! You destroyed all the enemy ships!\n(Press any key to end the game)");
             Console.ReadKey();

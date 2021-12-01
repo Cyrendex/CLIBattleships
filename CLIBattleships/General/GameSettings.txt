@@ -1,0 +1,5 @@
+﻿XSize = 20
+YSize = 20
+SalvoMode = true
+DefaultNumberOfShots = 1
+NameCharacterLimit = 15

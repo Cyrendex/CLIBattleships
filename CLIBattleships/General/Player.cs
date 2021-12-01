@@ -15,11 +15,11 @@ namespace CLIBattleships
         public int TotalHealth { get; set; }
 
         // In order to add/remove a ship, initialize it in the constructor and add it to the ShipList
-        public Player(string name, Grid[][] plane)
+        public Player(Grid[][] plane)
         {
-            Name = name;
             GridPlane = plane;
-            Score = 0;            
+            Score = 0;  
+            
             AircraftCarrier aircraftCarrier = new AircraftCarrier(this);
             Battleship battleship = new Battleship(this);
             Destroyer destroyer = new Destroyer(this);
@@ -27,17 +27,20 @@ namespace CLIBattleships
             Patrol patrol = new Patrol(this);
             TestShip testShip = new TestShip(this);
             ShipList = new ShipContent[] { aircraftCarrier, battleship, destroyer, submarine, patrol, testShip };
+
             if (GameSettings.salvoMode)
                 NumberOfShots = ShipList.Length;
             else
-                NumberOfShots = GameSettings.DEFAULT_NUMBER_OF_SHOTS;
+                NumberOfShots = GameSettings.DefaultNumberOfShots;
         }
 
         /* If it's the player's own grid, the ships will be drawn with their respective symbols. If not, they will be drawn with the empty symbol. */
-        public void DrawGridPlane(bool ownGrid = false)
+        public void DrawGridPlane(bool ownGrid = false, bool gameEnded = false)
         {
-            int maxIndent = (int)Math.Floor(Math.Log10(GameSettings.GRID_YSIZE)); // How many times you'd need to indent at most.
+            int maxIndent = (int)Math.Floor(Math.Log10(GameSettings.GridYSize)); // How many times you'd need to indent at most.
             int indent = 0;
+
+            // A function that decides how many spaces the indentation should be for each number or letter.
             var myswitch = new Dictionary<Func<int, bool>, Action> // Function to decide how many times I need to indent for each case
                 {
                     { x => x < 10 ,          () => indent = maxIndent     },
@@ -51,28 +54,30 @@ namespace CLIBattleships
                     { x => x < 1000000000 ,  () => indent = maxIndent - 8 }
                 };
 
+            // Indenting the letters
             for (int i = 0; i < maxIndent + 2; i++) // +2 for the initial space
             {
                 Console.Write(" ");
             }
-            for (int coordinateLetter = 0; coordinateLetter < GameSettings.GRID_XSIZE; coordinateLetter++) // Loop for setting the letters in.
+            for (int coordinateLetter = 0; coordinateLetter < GameSettings.GridXSize; coordinateLetter++) // Loop for setting the letters in.
             {
                 Console.Write((CoordinateLetter)coordinateLetter + " ");
 
             }
             Console.WriteLine();
             
-
-            for (int coordinateNumber = 1; coordinateNumber <= GameSettings.GRID_YSIZE; coordinateNumber++)
+            
+            for (int coordinateNumber = 1; coordinateNumber <= GameSettings.GridYSize; coordinateNumber++)
             {
                 myswitch.First(sw => sw.Key(coordinateNumber)).Value();
+                // Indenting the numbers
                 for (int i = 0; i < indent; i++)
                 {
                     Console.Write(" ");
                 }
                 Console.Write(coordinateNumber);
 
-                for (int coordinateLetter = 0; coordinateLetter < GameSettings.GRID_XSIZE; coordinateLetter++)
+                for (int coordinateLetter = 0; coordinateLetter < GameSettings.GridXSize; coordinateLetter++)
                 {
                     Console.Write(" " + GridPlane[coordinateNumber - 1][coordinateLetter].GetSymbol(ownGrid));
                    
@@ -81,46 +86,18 @@ namespace CLIBattleships
             }
             Console.WriteLine();
 
+            // Display the score and health if the game ended.
+            if(gameEnded)
+                Console.WriteLine("Score: {0}\nHealth Left: {1}\n", Score, TotalHealth);
+
             // Puts '='s longer than the x axis of the grid... *3 because formatting.
-            for (int length = 0; length < GameSettings.GRID_XSIZE * 3; length++)
+            for (int length = 0; length < GameSettings.GridXSize * 3; length++)
             {
                 Console.Write("=");
             }
             Console.WriteLine("\n");
         }
-        /* Overloaded for end game formatting */
-        public void DrawGridPlane(bool gameEnded, bool ownGrid = false)
-        {
-            Console.Write("   "); // Initial space to allign letters
-            for (int coordinateLetter = 0; coordinateLetter < GameSettings.GRID_XSIZE; coordinateLetter++)
-            {
-                Console.Write((CoordinateLetter)coordinateLetter + " ");
 
-            }
-            Console.WriteLine();
-            for (int coordinateNumber = 1; coordinateNumber <= GameSettings.GRID_YSIZE; coordinateNumber++)
-            {
-                if (coordinateNumber < 10)
-                    Console.Write(" " + coordinateNumber);
-                else
-                    Console.Write(coordinateNumber);
-
-                for (int coordinateLetter = 0; coordinateLetter < GameSettings.GRID_XSIZE; coordinateLetter++)
-                {
-                    Console.Write(" " + GridPlane[coordinateNumber - 1][coordinateLetter].GetSymbol(ownGrid));
-
-                }
-                Console.WriteLine();
-            }
-            Console.WriteLine();
-            Console.WriteLine("Score: {0}\nHealth Left: {1}\n", Score, TotalHealth);
-            // Puts '='s longer than the x axis of the grid... *3 because formatting.
-            for (int length = 0; length < GameSettings.GRID_XSIZE * 3; length++)
-            {
-                Console.Write("=");
-            }
-            Console.WriteLine("\n");
-        }
         public void SetShipsOnGridPlane()
         {
             int coordinateNumber1, coordinateNumber2;
@@ -131,10 +108,10 @@ namespace CLIBattleships
                 do
                 {
                     DrawGridPlane(true);
-                    Console.WriteLine("{0}, what should be the starting point of your {1}? (Length: {2})",Name, ship.Name, ship.Size);
+                    Console.WriteLine("{0}, what should be the starting point of your {1}? (Length: {2})", Name, ship.Name, ship.Size);
                     CoordinateHandler.CoordinateAsker(out coordinateLetter1, out coordinateNumber1);
                     Console.WriteLine();
-                    Console.WriteLine("{0}, what should be the ending point of your {1}?",Name, ship.Name);
+                    Console.WriteLine("{0}, what should be the ending point of your {1}?", Name, ship.Name);
                     CoordinateHandler.CoordinateAsker(out coordinateLetter2, out coordinateNumber2);
                     Console.WriteLine();
                     valid = GridPlaneHandler.SizeAndCollisionChecker(ship.Name, GridPlane, coordinateLetter1, coordinateLetter2, coordinateNumber1, coordinateNumber2, ship.Size);
@@ -151,10 +128,12 @@ namespace CLIBattleships
         {
             Grid grid = enemyPlayer.GridPlane[coordinateNumber - 1][(int)coordinateLetter];
             grid.State = GridState.Attacked;
+
             ShipContent ship = (ShipContent)grid.Content;
             ship.Health--;
             enemyPlayer.TotalHealth--;
             Score += ship.Score;
+
             if (ship.IsSunk())
             {
                 if (GameSettings.salvoMode)
@@ -173,46 +152,43 @@ namespace CLIBattleships
             return "" + coordinateLetter + coordinateNumber + empty.ReturnHitMessage() + "\n";
 
         }
-        public string ShootAndReportStatus(Player enemyPlayer)
+        public string ShootAndReturnStatus(Player enemyPlayer)
         {
             string message = "";
-            bool shot = false;
+            bool shotFired;
             CoordinateLetter coordinateLetter;
             int coordinateNumber;
             for (int shotsLeft = NumberOfShots; shotsLeft > 0; shotsLeft--)
             {
                 if (enemyPlayer.TotalHealth <= 0)
                     break;
-                shot = false;
-                while (!shot)
+                shotFired = false;
+                while (!shotFired)
                 {
                     enemyPlayer.DrawGridPlane();
                     Console.WriteLine("Where would you like to shoot? (" + shotsLeft + " shot(s) left)\n(If you want to view your own grid, type 'grid')\n");
                     Console.Write("Please enter a coordinate: ");
                     string prompt = Console.ReadLine();
-                    if (prompt.ToLower().Equals("grid"))
+
+                    if (WantsToSeeTheirGrid(prompt))
                     {
-                        Console.Clear();
-                        DrawGridPlane(ownGrid: true);
-                        Console.WriteLine("(Press any key to go back)");
-                        Console.ReadKey();
-                        Console.Clear();
+                        ShowOwnGrid();
                     }
-                    else
+                    else // Wants to shoot
                     {
                         CoordinateHandler.CoordinateSplitter(prompt, out coordinateLetter, out coordinateNumber);
-                        if (coordinateNumber != -1) // If the coordinate is valid
+                        if (CoordinateIsValid(coordinateNumber))
                         {
                             Grid enemyGrid = enemyPlayer.GridPlane[coordinateNumber - 1][(int)coordinateLetter];
-                            if (enemyGrid.State == GridState.NotAttacked)
+                            if (EnemyGridNotAttacked(enemyGrid))
                             {
-                                if (enemyGrid.Content is ShipContent)
+                                if (EnemyGridHasShip(enemyGrid))
                                     message += ShootShipReturnMessage(enemyPlayer, coordinateLetter, coordinateNumber);
                                 else // It's EmptyContent or an unprecedented error.
                                     message += ShootEmptyReturnMessage(enemyPlayer, coordinateLetter, coordinateNumber);
-                                shot = true;
+                                shotFired = true;
                             }
-                            else
+                            else // Enemy Grid was already attacked.
                             {
                                 enemyGrid.PrintAttackedMessage();
                                 System.Threading.Thread.Sleep(1000);
@@ -229,6 +205,34 @@ namespace CLIBattleships
                 }
             }
             return message;
+        }
+        private bool WantsToSeeTheirGrid(string prompt)
+        {
+            return prompt.ToLower().Equals("grid");
+        }
+        private void ShowOwnGrid()
+        {
+            Console.Clear();
+            DrawGridPlane(ownGrid: true);
+            Console.WriteLine("(Press any key to go back)");
+            Console.ReadKey();
+            Console.Clear();
+        }
+
+        // Coordinate is valid if the coordinate number isn't -1
+        private bool CoordinateIsValid(int coordinateNumber)
+        {
+            return coordinateNumber != -1;
+        }
+
+        private bool EnemyGridNotAttacked(Grid enemyGrid)
+        {
+            return enemyGrid.State == GridState.NotAttacked;
+        }
+
+        private bool EnemyGridHasShip(Grid enemyGrid)
+        {
+            return enemyGrid.Content is ShipContent;
         }
     }
 }

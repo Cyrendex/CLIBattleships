@@ -19,8 +19,8 @@ namespace CLIBattleships
                 {
                     int num = Int32.Parse(coordinate.Substring(1, length - 1).TrimStart('0').PadLeft(1, '0')); // Extract number from coordinate
                     Enum.TryParse(coordinate.Substring(0, 1).ToUpper(), out CoordinateLetter letter);
-                    bool letterValid = (int)letter <= GameSettings.GRID_XSIZE; // Checks if the letter is in bound of global size. MAX: 26
-                    if (num > 0 && num <= GameSettings.GRID_YSIZE && letterValid) // Seriously, don't try this. MAX: int limit
+                    bool letterValid = (int)letter <= GameSettings.GridXSize; // Checks if the letter is in bound of global size. MAX: 26
+                    if (num > 0 && num <= GameSettings.GridYSize && letterValid) // Seriously, don't try this. MAX: int limit
                     {
                         coordinateNumber = num;
                         coordinateLetter = letter;
