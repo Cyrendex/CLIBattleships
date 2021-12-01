@@ -7,3 +7,5 @@ As the project name implies, this is a Battleships game played on console. It's 
 This project is naught but a fun little time-killer. Feel free to use it for entertainment (I'd be shocked if you could use it commercially, honestly).
 Have fun, report any bugs if you do find one.
 Thank you.
+
+Note: Before running, change the path string to your own absolute path of the "GameSettings.txt" file in the FileHandler class.
