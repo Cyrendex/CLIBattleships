@@ -7,9 +7,19 @@ namespace CLIBattleships
 {
     public static class FileHandler
     {
-        // Change this to your own full path of GameSettings.txt
-        private static readonly string path = @"C:\Users\Aaron\Source\Repos\CLIBattleships\CLIBattleships\General\GameSettings.txt";
-        private static string[] Settings { get; } = File.ReadAllLines(path);
+        private static string[] Settings { get; set; }
+        private static string dir = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+        private static string file = dir + @"\General\GameSettings.txt";
+        private static StreamReader sr = new StreamReader(file);
+        static FileHandler()
+        {
+            string settings = "", line;
+            while((line = sr.ReadLine()) != null)
+            {
+                settings += line + "\n"; 
+            }
+            Settings = settings.Split("\n");
+        }
         public static string ReturnValueAfterKeyword(string keyword)
         {
             foreach (string line in Settings)
